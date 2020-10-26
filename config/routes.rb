@@ -6,6 +6,8 @@ Spree::Core::Engine.routes.draw do
       collection do
         get :sales_total
         post :sales_total
+        get :captures_total
+        post :captures_total
       end
     end
   end

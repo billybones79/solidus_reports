@@ -1,0 +1,64 @@
+<% admin_breadcrumb(link_to t('spree.reports'), spree.admin_reports_path) %>
+<% admin_breadcrumb(t('spree.sales_total')) %>
+
+<% content_for :page_actions do %>
+<% end %>
+
+
+<% content_for :table_filter_title do %>
+  <%= t('spree.date_range') %>
+<% end %>
+
+<% content_for :table_filter do %>
+  <%= form_tag  url: spree.url_for(controller: 'admin/reports', action: :captures_total)  do |s| %>
+    <div class="date-range-filter field">
+      <div class="date-range-fields input-group">
+        <%= text_field_tag :completed_at_gt, params[:completed_at_gt], class: 'datepicker datepicker-from form-control', value: datepicker_field_value(params[:completed_at_gt]), placeholder: t('spree.start') %>
+
+        <div class="input-group-prepend input-group-append">
+        <span class="input-group-text range-divider">
+          <i class="fa fa-arrow-right"></i>
+        </span>
+        </div>
+
+        <%= text_field_tag :completed_at_lt, params[:completed_at_lt], class: 'datepicker datepicker-to form-control', value: datepicker_field_value(params[:completed_at_lt]), placeholder: t('spree.end') %>
+      </div>
+    </div>
+
+    <div class="actions filter-actions">
+      <%= button_tag t('spree.search'), class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+
+<% end %>
+
+<table class="admin-report" data-hook="sales_total">
+  <thead>
+  <tr>
+    <th><%= t('spree.name') %></th>
+    <th><%= t('spree.amount') %></th>
+    <th><%= t('spree.date') %></th>
+    <th><%= t('spree.order_number') %></th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @search.each do |row| %>
+    <tr>
+      <td><%= row.stateful&.order&.billing_address&.name %></td>
+      <td><%= row.stateful&.display_amount %></td>
+      <td><%= row.created_at %></td>
+      <td><%= row.stateful&.order&.number %></td>
+    </tr>
+  <% end %>
+  </tbody>
+  <tbody>
+  <% @totals.each do |key, row| %>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><%= row[:sales_total].format %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
