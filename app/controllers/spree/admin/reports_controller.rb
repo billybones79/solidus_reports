@@ -59,10 +59,15 @@ module Spree
         params[:q] = search_params
         if params[:completed_at_gt].blank?
           params[:completed_at_gt] = 1.day.ago.end_of_day
+        else
+          params[:completed_at_gt] = Date.strptime(params[:completed_at_gt])
         end
+
         if params[:completed_at_lt].blank?
 
           params[:completed_at_lt] = 1.day.from_now.beginning_of_day
+        else
+          params[:completed_at_lt] = Date.strptime(params[:completed_at_lt])
         end
 
         @search = Spree::StateChange.where(name: "payment").where(next_state: "completed").where("created_at > ?",params[:completed_at_gt]).where("created_at < ?", params[:completed_at_lt])
